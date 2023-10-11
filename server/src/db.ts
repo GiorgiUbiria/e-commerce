@@ -5,6 +5,7 @@ export interface User {
     firstName: string;
     lastName: string;
     password: string;
+    passwordSalt: string;
     username: string;
     email: string;
     createdAt: string;
@@ -48,6 +49,7 @@ export class ServiceDB {
     firstName TEXT NOT NULL,
     lastName TEXT NOT NULL,
     password TEXT NOT NULL,
+    passwordSalt TEXT NOT NULL,
     username TEXT NOT NULL,
     email TEXT NOT NULL,
     createdAt TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -63,21 +65,18 @@ export class ServiceDB {
         firstName,
         lastName,
         password,
+        passwordSalt,
         email,
         username,
     }: Omit<User, "id" | "createdAt" | "boughtServices">): Promise<
         Omit<User, "id" | "createdAt" | "boughtServices"> | Error
     > {
-        const existingPerson = await this.getUser(email);
-
-        if (!(existingPerson instanceof Error)) {
-            return new Error("User already exists");
-        }
-
+        console.log("Starting to create a user")
         const query = this.db.query(`
-            INSERT INTO users (firstName, lastName, password, username , email) VALUES ($firstName, $lastName, $password, $username, $email)
+            INSERT INTO users (firstName, lastName, password, passwordSalt, username , email) VALUES ($firstName, $lastName, $password, $passwordSalt, $username, $email)
         `);
 
+        console.log("Query successfull")
         let user: void | User;
 
         try {
@@ -85,9 +84,12 @@ export class ServiceDB {
                 $firstName: firstName,
                 $lastName: lastName,
                 $password: password,
+                $passwordSalt: passwordSalt,
                 $username: username,
                 $email: email,
             });
+
+            console.log("created user: ", user)
         } catch (e) {
             return new Error("An error occurred while creating the user");
         }
@@ -96,6 +98,7 @@ export class ServiceDB {
             firstName,
             lastName,
             password,
+            passwordSalt,
             username,
             email,
         };
@@ -141,7 +144,7 @@ export class ServiceDB {
     }
 
 
-    async getUser(email: string): Promise<User | Error> {
+    async getUserByEmail(email: string): Promise<User | Error> {
         const query = this.db.query(
             `SELECT * FROM users WHERE email  = $email`
         );
@@ -155,6 +158,71 @@ export class ServiceDB {
         }
 
         return user;
+    }
+
+    async checkUserByEmail(email: string): Promise<boolean> {
+        const query = this.db.query(
+            `SELECT * FROM users WHERE email  = $email`
+        );
+
+        const user = query.get({
+            $email: email,
+        }) as User;
+
+        if (!user) {
+            return false
+        }
+
+        return true;
+    }
+
+
+    async getUserById(id: string): Promise<User | Error> {
+        const query = this.db.query(
+            `SELECT * FROM users WHERE id  = $id`
+        );
+
+        const user = query.get({
+            $id: id,
+        }) as User;
+
+        if (!user) {
+            return new Error("User not found");
+        }
+
+        return user;
+    }
+
+    async getUserByUsername(username: string): Promise<User | Error> {
+        const query = this.db.query(
+            `SELECT * FROM users WHERE username  = $username`
+        );
+
+        const user = query.get({
+            $username: username,
+        }) as User;
+
+        if (!user) {
+            return new Error("User not found");
+        }
+
+        return user;
+    }
+
+    async checkUserByUsername(username: string): Promise<boolean> {
+        const query = this.db.query(
+            `SELECT * FROM users WHERE username  = $username`
+        );
+
+        const user = query.get({
+            $username: username,
+        }) as User;
+
+        if (!user) {
+            return false
+        }
+
+        return true;
     }
 
     async getService(id: string): Promise<Service | Error> {
