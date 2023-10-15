@@ -1,0 +1,15 @@
+{
+  "vary": "Origin",
+  "access-control-allow-methods": "*",
+  "access-control-allow-headers": "*",
+  "access-control-allow-credentials": "true",
+  "content-type": "application/json;charset=utf-8",
+  "date": "Thu, 12 Oct 2023 22:00:46 GMT",
+  "content-length": "55",
+  "Set-Cookie": [
+    "refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjN9.RCVbGDtDzGU6QdH2Zn9C4FWuVtg8MZiT7zyl0QF9RHE; Max-Age=604800; Path=/",
+    "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjN9.RCVbGDtDzGU6QdH2Zn9C4FWuVtg8MZiT7zyl0QF9RHE; Max-Age=900; Path=/"
+  ],
+  "access-control-exposed-headers": "*"
+}
+

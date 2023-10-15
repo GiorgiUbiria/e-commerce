@@ -1,33 +1,36 @@
 import { redirect } from '@sveltejs/kit';
+import { edenFetch } from '@elysiajs/eden'
+import type { App } from '../../../../server/src/index'
+
+const fetch = edenFetch<App>('http://localhost:3000/')
 
 export const actions = {
-    default: async ({ request }: { request: any }) => {
+    default: async ({ request, cookies }: any) => {
         const data = await request.formData();
 
-        const name = data.get('name');
-        console.log(name)
+        const username = data.get('username');
+        const password = data.get('password');
 
-        /*
-            const result = await fetch(`http://localhost:3000/sign-in`, {
-                    method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
+        try {
+            const response = await fetch('auth/sign_in', {
+                method: 'POST',
+                body: {
+                    username,
+                    password,
                 },
-                body: JSON.stringify({
-                    name,
-                })
+                credentials: 'include',
             })
-        */
 
-        const result = await fetch(`http://localhost:3000/sign-in/${name}`, {
-            method: 'GET',
-        })
+            const setCookie = response.headers.getSetCookie();
 
-        if (result.ok) {
-            console.log(await result.text())
-            throw redirect(303, '/');
-        } else {
-            throw redirect(303, '/sign-in');
+            if (response?.data?.success) {
+                console.log(setCookie[0].split('=')[1].split(';')[0])
+                cookies.set("Authorization", `Bearer ${setCookie[0].split('=')[1].split(';')[0]}`);
+                throw redirect(303, '/')
+            }
+        } catch (error) {
+            console.log(error)
+            throw error
         }
-    }
+    },
 };

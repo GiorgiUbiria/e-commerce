@@ -18,8 +18,8 @@ const app = new Elysia()
     }))
     .use(
         cors({
-            origin: "*",
-            credentials: true
+            origin: 'http://localhost:5173',
+            credentials: true,
         })
     )
     .use(
@@ -29,9 +29,11 @@ const app = new Elysia()
         })
     )
     .use(cookie())
-    .get("/", async () => { return "Hello World"; })
-    .use(services)
+    .get("/", async () => {
+        return "Hello, World!"
+    })
     .use(auth)
+    .use(services)
     .use(admin)
     .listen(3000);
 

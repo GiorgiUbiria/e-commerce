@@ -2,9 +2,8 @@ import { Elysia } from "elysia";
 
 export const isAuthenticated = (app: Elysia) =>
     app.derive(async ({ db, cookie, jwt, set }: any) => {
-        console.log(cookie);
-
-        if (!cookie!.access_token) {
+        if (!cookie!.accessToken) {
+            console.log("Access token not found");
             set.status = 401;
             return {
                 success: false,
@@ -13,11 +12,12 @@ export const isAuthenticated = (app: Elysia) =>
             }
         }
 
-        const { userId } = await jwt.verify(cookie!.access_token);
+        console.log("Access token found");
 
-        console.log(userId);
+        const { userId } = await jwt.verify(cookie!.accessToken);
 
         if (!userId) {
+            console.log("User not found");
             set.status = 401;
             return {
                 success: false,
@@ -27,8 +27,6 @@ export const isAuthenticated = (app: Elysia) =>
         }
 
         const user = await db.getUserById(userId);
-
-        console.log(user);
 
         if (!user) {
             set.status = 401;

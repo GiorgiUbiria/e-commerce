@@ -14,8 +14,8 @@ export const auth = (app: Elysia) =>
             }))
             .use(cookie())
             .decorate("db", new ServiceDB())
+
             .post("/sign_up", async ({ db, body, set }) => {
-                console.log("Starting to sign up the user")
                 const { firstName, lastName, password, username, email }: any = body;
 
                 const emailExists = await db.checkUserByEmail(email);
@@ -55,7 +55,6 @@ export const auth = (app: Elysia) =>
                 }
 
                 try {
-                    console.log("Trying to create a new user")
                     await db.createUser(newUser);
                 } catch (error) {
                     console.error(error)
@@ -84,6 +83,7 @@ export const auth = (app: Elysia) =>
 
                 if (!user) {
                     set.status = 400;
+                    console.log("User not found")
                     return {
                         success: false,
                         data: null,
@@ -94,6 +94,7 @@ export const auth = (app: Elysia) =>
                 const isCorrectPassword = await comparePassword(password, user.passwordSalt, user.password);
 
                 if (!isCorrectPassword) {
+                    console.log("Incorrect password")
                     set.status = 400;
                     return {
                         success: false,
@@ -104,21 +105,13 @@ export const auth = (app: Elysia) =>
 
                 const accessToken = await jwt.sign({
                     userId: user.id,
-                })
-
-                const refreshToken = await jwt.sign({
-                    userId: user.id,
-                })
-
-                setCookie("refreshToken", refreshToken, {
-                    maxAge: 86400 * 7,
-                    path: "/"
-                })
+                });
 
                 setCookie("accessToken", accessToken, {
-                    maxAge: 15 * 60,
-                    path: "/"
-                })
+                    httpOnly: true,
+                    maxAge: 15 * 60 * 60,
+                    path: "/",
+                });
 
                 return {
                     success: true,
@@ -131,5 +124,29 @@ export const auth = (app: Elysia) =>
                     password: t.String(),
                 }),
             })
-            .use(isAuthenticated)
+
+            .post("/sign_out", ({ setCookie }) => {
+                setCookie("accessToken", "", {
+                    maxAge: 0,
+                })
+            })
+            .get("/users", async ({ headers, db, jwt }) => {
+                if (headers.authorization) {
+                    const { userId } = await jwt.verify(headers.authorization.split(" ")[1]);
+                    const user = await db.getUserById(userId);
+
+                    if (!user) {
+                        return {
+                            success: false,
+                            data: null,
+                            message: "User not found",
+                        }
+                    }
+                    return {
+                        success: true,
+                        data: user,
+                        message: "User retrieved",
+                    }
+                }
+            })
     );

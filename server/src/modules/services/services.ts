@@ -11,14 +11,15 @@ export const services = (app: Elysia) =>
         }))
             .use(cookie())
             .decorate("db", new ServiceDB())
-            .get("/", async ({ jwt, set, cookie: { auth }, db }) => {
-                const profile = await jwt.verify(auth)
+            .get("/", async ({ jwt, set, cookie: { accessToken }, db }) => {
+                const profile = await jwt.verify(accessToken)
 
                 if (!profile) {
                     set.status = 401
                     return []
                 }
 
-                db.getAllServices()
+                const services = await  db.getAllServices()
+                return services
             })
     )
