@@ -130,23 +130,15 @@ export const auth = (app: Elysia) =>
                     maxAge: 0,
                 })
             })
-            .get("/users", async ({ headers, db, jwt }) => {
-                if (headers.authorization) {
-                    const { userId } = await jwt.verify(headers.authorization.split(" ")[1]);
-                    const user = await db.getUserById(userId);
 
-                    if (!user) {
-                        return {
-                            success: false,
-                            data: null,
-                            message: "User not found",
-                        }
-                    }
-                    return {
-                        success: true,
-                        data: user,
-                        message: "User retrieved",
-                    }
+            .use(isAuthenticated)
+
+            .get("/users", user => {
+                console.log("User is: ", user.user)
+                return {
+                    success: true,
+                    data: user.user,
+                    message: "User retrieved",
                 }
             })
     );
