@@ -13,7 +13,11 @@ export const isAuthenticated = (app: Elysia) =>
 
         const authorization = headers!.authorization.split(" ")[1];
 
+        console.log("authorization header: ", authorization)
+
         const { userId } = await jwt.verify(authorization);
+
+        console.log("userId: ", userId)
 
         if (!userId) {
             console.log("User not found");
@@ -25,9 +29,9 @@ export const isAuthenticated = (app: Elysia) =>
             }
         }
 
-        const user = await db.getUserById(userId);
-        
-        if (!user) {
+        const authUserData = await db.getUserById(userId);
+
+        if (!authUserData) {
             set.status = 401;
             return {
                 success: false,
@@ -36,7 +40,7 @@ export const isAuthenticated = (app: Elysia) =>
             }
         }
 
-        return {
-            user
-        }
+        console.log("returning user")
+
+        return { authUserData }
     })

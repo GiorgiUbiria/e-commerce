@@ -132,13 +132,22 @@ export const auth = (app: Elysia) =>
             })
 
             .use(isAuthenticated)
+            .get("/users", async (context) => {
+                const authUserData = context.authUserData;
+                const db = context.db;
 
-            .get("/users", user => {
-                console.log("User is: ", user.user)
-                return {
-                    success: true,
-                    data: user.user,
-                    message: "User retrieved",
+                if (authUserData) {
+                    console.log("User is authorized")
+
+                    const users = await db.getAllUsers();
+
+                    console.log(users)
+
+                    return {
+                        success: true,
+                        data: users,
+                        message: "Users retrieved",
+                    }
                 }
             })
     );
