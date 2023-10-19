@@ -32,6 +32,7 @@ export class ServiceDB {
     passwordSalt TEXT NOT NULL,
     username TEXT NOT NULL,
     email TEXT NOT NULL,
+    role TEXT NOT NULL,
     createdAt TIMESTAMP NOT NULL DEFAULT current_timestamp,
     updatedAt TIMESTAMP NOT NULL DEFAULT current_timestamp
 )`;
@@ -48,11 +49,11 @@ export class ServiceDB {
         passwordSalt,
         email,
         username,
-    }: Omit<User, "id" | "createdAt" | "boughtServices">): Promise<
-        Omit<User, "id" | "createdAt" | "boughtServices"> | Error
+    }: Omit<User, "id" | "createdAt" | "boughtServices" | "role">): Promise<
+        Omit<User, "id" | "createdAt" | "boughtServices" | "role"> | Error
     > {
         const query = this.db.query(`
-            INSERT INTO users (firstName, lastName, password, passwordSalt, username , email) VALUES ($firstName, $lastName, $password, $passwordSalt, $username, $email)
+            INSERT INTO users (firstName, lastName, password, passwordSalt, username , email, role) VALUES ($firstName, $lastName, $password, $passwordSalt, $username, $email, $role)
         `);
 
         let user: void | User;
@@ -65,6 +66,7 @@ export class ServiceDB {
                 $passwordSalt: passwordSalt,
                 $username: username,
                 $email: email,
+                $role: "admin",
             });
         } catch (e) {
             return new Error("An error occurred while creating the user");

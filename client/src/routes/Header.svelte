@@ -4,8 +4,6 @@
 	import github from '$lib/images/github.svg';
 
 	export let user: any;
-
-	console.log(user);
 </script>
 
 <header>
@@ -20,25 +18,45 @@
 			<path d="M0,0 L1,2 C1.5,3 1.5,3 2,3 L2,0 Z" />
 		</svg>
 		<ul>
-			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
-				<a href="/">Home</a>
-			</li>
-			<li aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}>
-				<a href="/services">Services</a>
-			</li>
 			{#if !user.authorization}
+				<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+					<a href="/">Home</a>
+				</li>
 				<li aria-current={$page.url.pathname.startsWith('/sign-in') ? 'page' : undefined}>
 					<a href="/sign-in">Sign in</a>
 				</li>
 				<li aria-current={$page.url.pathname.startsWith('/sign-up') ? 'page' : undefined}>
 					<a href="/sign-up">Sign up</a>
 				</li>
+				<li aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}>
+					<a href="/services">Services</a>
+				</li>
+			{:else if user.userRole === 'admin' && user.authorization}
+				<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+					<a href="/">Home</a>
+				</li>
 				<li aria-current={$page.url.pathname.startsWith('/users') ? 'page' : undefined}>
 					<a href="/users">Users</a>
+				</li>
+				<li aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}>
+					<a href="/services">Services</a>
 				</li>
 				<li aria-current={$page.url.pathname === '/create_service' ? 'page' : undefined}>
 					<a href="/create_service">Create a Service</a>
 				</li>
+				<form method="POST" action="/sign_out">
+					<button type="submit">Sign out</button>
+				</form>
+			{:else if user.userRole !== 'admin' && user.authorization}
+				<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+					<a href="/">Home</a>
+				</li>
+				<li aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}>
+					<a href="/services">Services</a>
+				</li>
+				<form method="POST" action="/sign_out">
+					<button type="submit">Sign out</button>
+				</form>
 			{/if}
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -139,6 +157,38 @@
 	}
 
 	a:hover {
+		color: var(--color-theme-1);
+	}
+
+	nav button {
+		outline: none;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		margin: 0;
+		height: 100%;
+		color: var(--color-text);
+		font-weight: 700;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		text-decoration: none;
+		transition: color 0.2s linear;
+		display: flex;
+		height: 100%;
+		align-items: center;
+		padding: 0 0.5rem;
+		color: var(--color-text);
+		font-weight: 700;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		text-decoration: none;
+		transition: color 0.2s linear;
+	}
+
+	button:hover {
 		color: var(--color-theme-1);
 	}
 </style>

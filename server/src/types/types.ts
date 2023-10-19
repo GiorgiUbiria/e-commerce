@@ -6,6 +6,7 @@ export interface User {
     passwordSalt: string;
     username: string;
     email: string;
+    role: string;
     createdAt: string;
 }
 
@@ -23,6 +24,7 @@ export interface UserDto {
     firstName: string;
     lastName: string;
     username: string;
+    role: string;
     email: string;
 }
 

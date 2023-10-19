@@ -29,6 +29,7 @@ export const actions = {
                 const refreshToken = setCookie[1].split('=')[1].split(';')[0];
                 cookies.set("Authorization", `Bearer ${accessToken}`);
                 cookies.set("RefreshToken", `Bearer ${refreshToken}`);
+                cookies.set("userRole", response.data.data);
                 throw redirect(303, '/')
             }
         } catch (error) {

@@ -47,6 +47,7 @@ export const auth = (app: Elysia) =>
                     password: hash,
                     passwordSalt: salt,
                     username,
+                    role: "admin",
                     email: emailHash,
                 }
 
@@ -58,7 +59,7 @@ export const auth = (app: Elysia) =>
                 } finally {
                     return {
                         success: true,
-                        data: newUser,
+                        data: newUser.role,
                         message: "User created",
                     }
                 }
@@ -122,7 +123,7 @@ export const auth = (app: Elysia) =>
 
                 return {
                     success: true,
-                    data: null,
+                    data: user.role,
                     message: "User signed in",
                 }
             }, {
