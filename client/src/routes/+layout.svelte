@@ -1,10 +1,12 @@
-<script>
+<script lang="ts">
 	import Header from './Header.svelte';
 	import './styles.css';
+
+	export let data: any;
 </script>
 
 <div class="app">
-	<Header />
+	<Header user={data} />
 
 	<main>
 		<slot />

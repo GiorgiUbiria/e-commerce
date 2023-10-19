@@ -1,7 +1,11 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/stores';
 	import logo from '$lib/images/svelte-logo.svg';
 	import github from '$lib/images/github.svg';
+
+	export let user: any;
+
+	console.log(user);
 </script>
 
 <header>
@@ -19,18 +23,23 @@
 			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="/">Home</a>
 			</li>
-			<li aria-current={$page.url.pathname === '/create_service' ? 'page' : undefined}>
-				<a href="/create_service">Create a Service</a>
-			</li>
 			<li aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}>
 				<a href="/services">Services</a>
 			</li>
-			<li aria-current={$page.url.pathname.startsWith('/sign-in') ? 'page' : undefined}>
-				<a href="/sign-in">Sign in</a>
-			</li>
-			<li aria-current={$page.url.pathname.startsWith('/sign-up') ? 'page' : undefined}>
-				<a href="/sign-up">Sign up</a>
-			</li>
+			{#if !user.authorization}
+				<li aria-current={$page.url.pathname.startsWith('/sign-in') ? 'page' : undefined}>
+					<a href="/sign-in">Sign in</a>
+				</li>
+				<li aria-current={$page.url.pathname.startsWith('/sign-up') ? 'page' : undefined}>
+					<a href="/sign-up">Sign up</a>
+				</li>
+				<li aria-current={$page.url.pathname.startsWith('/users') ? 'page' : undefined}>
+					<a href="/users">Users</a>
+				</li>
+				<li aria-current={$page.url.pathname === '/create_service' ? 'page' : undefined}>
+					<a href="/create_service">Create a Service</a>
+				</li>
+			{/if}
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />

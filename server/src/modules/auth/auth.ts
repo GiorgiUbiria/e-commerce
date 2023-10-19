@@ -2,7 +2,6 @@ import { Elysia, t } from "elysia";
 import { cookie } from "@elysiajs/cookie";
 import { jwt } from "@elysiajs/jwt";
 import { comparePassword, hashPassword, md5hash } from "../../utils/bcrypt";
-import { isAuthenticated } from "../../middleware/auth/isAuthenticated";
 import { ServiceDB } from "../../db";
 
 export const auth = (app: Elysia) =>
@@ -10,11 +9,10 @@ export const auth = (app: Elysia) =>
         app
             .use(jwt({
                 name: 'jwt',
-                secret: 'afrikelBavshvebsWyaliAkliat'
+                secret: Bun.env.JWT_TOKEN as string,
             }))
             .use(cookie())
             .decorate("db", new ServiceDB())
-
             .post("/sign_up", async ({ db, body, set }) => {
                 const { firstName, lastName, password, username, email }: any = body;
 
@@ -22,7 +20,6 @@ export const auth = (app: Elysia) =>
 
                 if (emailExists) {
                     set.status = 401;
-                    console.log("Email already exists")
                     return {
                         success: false,
                         data: null,
@@ -34,7 +31,6 @@ export const auth = (app: Elysia) =>
 
                 if (userNameExists) {
                     set.status = 401;
-                    console.log("Username already exists")
                     return {
                         success: false,
                         data: null,
@@ -75,7 +71,6 @@ export const auth = (app: Elysia) =>
                     email: t.String(),
                 }),
             })
-
             .post("/sign_in", async ({ db, body, set, jwt, setCookie }: any) => {
                 const { username, password }: any = body;
 
@@ -83,7 +78,6 @@ export const auth = (app: Elysia) =>
 
                 if (!user) {
                     set.status = 400;
-                    console.log("User not found")
                     return {
                         success: false,
                         data: null,
@@ -94,7 +88,6 @@ export const auth = (app: Elysia) =>
                 const isCorrectPassword = await comparePassword(password, user.passwordSalt, user.password);
 
                 if (!isCorrectPassword) {
-                    console.log("Incorrect password")
                     set.status = 400;
                     return {
                         success: false,
@@ -105,6 +98,14 @@ export const auth = (app: Elysia) =>
 
                 const accessToken = await jwt.sign({
                     userId: user.id,
+                }, {
+                    expiresIn: 15 * 60 * 60,
+                });
+
+                const refreshToken = await jwt.sign({
+                    userId: user.id,
+                }, {
+                    expiresIn: 7 * 24 * 60 * 60,
                 });
 
                 setCookie("accessToken", accessToken, {
@@ -112,6 +113,12 @@ export const auth = (app: Elysia) =>
                     maxAge: 15 * 60 * 60,
                     path: "/",
                 });
+
+                setCookie("refreshToken", refreshToken, {
+                    httpOnly: true,
+                    maxAge: 7 * 24 * 60 * 60,
+                    path: "/",
+                })
 
                 return {
                     success: true,
@@ -124,30 +131,13 @@ export const auth = (app: Elysia) =>
                     password: t.String(),
                 }),
             })
-
             .post("/sign_out", ({ setCookie }) => {
                 setCookie("accessToken", "", {
                     maxAge: 0,
                 })
-            })
 
-            .use(isAuthenticated)
-            .get("/users", async (context) => {
-                const authUserData = context.authUserData;
-                const db = context.db;
-
-                if (authUserData) {
-                    console.log("User is authorized")
-
-                    const users = await db.getAllUsers();
-
-                    console.log(users)
-
-                    return {
-                        success: true,
-                        data: users,
-                        message: "Users retrieved",
-                    }
-                }
+                setCookie("refreshToken", "", {
+                    maxAge: 0,
+                })
             })
     );

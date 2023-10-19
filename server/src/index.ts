@@ -7,7 +7,8 @@ import { logger } from '@bogeychan/elysia-logger';
 
 import { auth } from "./modules/auth/auth";
 import { services } from "./modules/services/services";
-import { admin } from "./modules/admin/admin";
+import { adminRoute } from "./modules/admin/admin";
+
 import { ServiceDB } from "./db";
 
 const app = new Elysia()
@@ -25,7 +26,7 @@ const app = new Elysia()
     .use(
         jwt({
             name: 'jwt',
-            secret: 'afrikelBavshvebsWyaliAkliat'
+            secret: Bun.env.JWT_TOKEN as string,
         })
     )
     .use(cookie())
@@ -33,8 +34,8 @@ const app = new Elysia()
         return "Hello, World!"
     })
     .use(auth)
+    .use(adminRoute)
     .use(services)
-    .use(admin)
     .listen(3000);
 
 console.log(

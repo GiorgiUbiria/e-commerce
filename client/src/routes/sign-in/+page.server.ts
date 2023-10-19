@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import { edenFetch } from '@elysiajs/eden'
+
 import type { App } from '../../../../server/src/index'
 
 const fetch = edenFetch<App>('http://localhost:3000/')
@@ -24,8 +25,10 @@ export const actions = {
             const setCookie = response.headers.getSetCookie();
 
             if (response?.data?.success) {
-                console.log(setCookie[0].split('=')[1].split(';')[0])
-                cookies.set("Authorization", `Bearer ${setCookie[0].split('=')[1].split(';')[0]}`);
+                const accessToken = setCookie[0].split('=')[1].split(';')[0];
+                const refreshToken = setCookie[1].split('=')[1].split(';')[0];
+                cookies.set("Authorization", `Bearer ${accessToken}`);
+                cookies.set("RefreshToken", `Bearer ${refreshToken}`);
                 throw redirect(303, '/')
             }
         } catch (error) {

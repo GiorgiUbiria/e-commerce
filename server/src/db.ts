@@ -1,26 +1,6 @@
 import { Database } from "bun:sqlite";
 
-export interface User {
-    id: string;
-    firstName: string;
-    lastName: string;
-    password: string;
-    passwordSalt: string;
-    username: string;
-    email: string;
-    createdAt: string;
-    boughtServices: Service[];
-}
-
-export interface Service {
-    id: string;
-    serviceName: string;
-    price: number;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-    userCount: number;
-}
+import { User, UserDto, Service, ServiceDto } from "./types/types";
 
 export class ServiceDB {
     private db: Database;
@@ -71,12 +51,10 @@ export class ServiceDB {
     }: Omit<User, "id" | "createdAt" | "boughtServices">): Promise<
         Omit<User, "id" | "createdAt" | "boughtServices"> | Error
     > {
-        console.log("Starting to create a user")
         const query = this.db.query(`
             INSERT INTO users (firstName, lastName, password, passwordSalt, username , email) VALUES ($firstName, $lastName, $password, $passwordSalt, $username, $email)
         `);
 
-        console.log("Query successfull")
         let user: void | User;
 
         try {
@@ -88,8 +66,6 @@ export class ServiceDB {
                 $username: username,
                 $email: email,
             });
-
-            console.log("created user: ", user)
         } catch (e) {
             return new Error("An error occurred while creating the user");
         }
@@ -133,9 +109,6 @@ export class ServiceDB {
             return new Error("An error occurred while creating the user");
         }
 
-        console.log("serviceName: ", serviceName, "price: ", price, "description: ", description);
-        console.log("created service");
-
         return {
             serviceName,
             price,
@@ -144,14 +117,14 @@ export class ServiceDB {
     }
 
 
-    async getUserByEmail(email: string): Promise<User | Error> {
+    async getUserByEmail(email: string): Promise<UserDto | Error> {
         const query = this.db.query(
-            `SELECT * FROM users WHERE email  = $email`
+            `SELECT (firstName, lastName, username, email, boughtServices) FROM users WHERE email  = $email`
         );
 
         const user = query.get({
             $email: email,
-        }) as User;
+        }) as UserDto;
 
         if (!user) {
             return new Error("User not found");
@@ -243,7 +216,6 @@ export class ServiceDB {
 
 
     async getAllUsers(): Promise<User[] | Error> {
-        console.log("getAllUsers");
         const query = this.db.query(`SELECT * FROM users`);
         const users = query.all() as User[];
 
@@ -251,20 +223,17 @@ export class ServiceDB {
             return new Error("No users found");
         }
 
-        console.log("users Got")
         return users;
     }
 
-    async getAllServices(): Promise<Service[] | Error> {
-        console.log("getAllServices");
-        const query = this.db.query(`SELECT * FROM services`);
-        const services = query.all() as Service[];
+    async getAllServices(): Promise<ServiceDto[] | Error> {
+        const query = this.db.query(`SELECT (serviceName, price, description, userCount) services`);
+        const services = query.all() as ServiceDto[];
 
         if (!services.length) {
             return new Error("No services found");
         }
 
-        console.log("services Got")
         return services;
     }
 }

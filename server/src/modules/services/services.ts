@@ -7,7 +7,7 @@ export const services = (app: Elysia) =>
     app.group("services", (app) =>
         app.use(jwt({
             name: 'jwt',
-            secret: 'afrikelBavshvebsWyaliAkliat'
+            secret: Bun.env.JWT_TOKEN as string,
         }))
             .use(cookie())
             .decorate("db", new ServiceDB())
