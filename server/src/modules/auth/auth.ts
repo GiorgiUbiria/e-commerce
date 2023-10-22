@@ -72,7 +72,7 @@ export const auth = (app: Elysia) =>
                     email: t.String(),
                 }),
             })
-            .post("/sign_in", async ({ db, body, set, jwt, setCookie, cookie }: any) => {
+            .post("/sign_in", async ({ db, body, set, jwt, setCookie }: any) => {
                 const { username, password }: any = body;
 
                 const user = await db.getUserByUsername(username);
