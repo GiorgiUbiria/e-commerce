@@ -31,7 +31,7 @@ export const adminRoute = (app: Elysia) =>
                     if (!users) {
                         return {
                             success: true,
-                            data: null,
+                            data: [],
                             message: "Users retrieved",
                         }
                     }

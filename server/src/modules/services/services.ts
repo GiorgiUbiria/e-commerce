@@ -1,4 +1,4 @@
-import { Elysia } from "elysia"
+import { Elysia, t } from "elysia"
 import jwt from "@elysiajs/jwt"
 import cookie from "@elysiajs/cookie"
 import { ServiceDB } from "../../db"
@@ -24,7 +24,7 @@ export const services = (app: Elysia) =>
                     if (!services) {
                         return {
                             success: true,
-                            data: null,
+                            data: [],
                             message: "Services retrieved",
                         }
                     }
@@ -35,7 +35,8 @@ export const services = (app: Elysia) =>
                         message: "Services retrieved",
                     }
                 }
-            })
+            },
+            )
             .post(
                 "/create_service",
                 async (context) => {
@@ -60,5 +61,17 @@ export const services = (app: Elysia) =>
                         }
                     }
                 },
+                {
+                    body: t.Object({
+                        serviceName: t.String(),
+                        price: t.Number(),
+                        description: t.String(),
+                    }),
+                    response: t.Object({
+                        success: t.Boolean(),
+                        data: t.Any(),
+                        message: t.String(),
+                    })
+                }
             )
     )
