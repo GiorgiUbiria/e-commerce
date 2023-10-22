@@ -1,6 +1,3 @@
-<script lang="ts">
-</script>
-
 <svelte:head>
 	<title>Create a Service</title>
 	<meta name="description" content="Svelte demo app" />

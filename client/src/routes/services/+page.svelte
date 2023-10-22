@@ -1,12 +1,7 @@
 <script lang="ts">
 	export let data: any;
-	export let error: any;
 
-	const { services } = data;
-
-	if (error) {
-		console.error('An error occurred:', error);
-	}
+	const services = data.data;
 </script>
 
 <svelte:head>
@@ -18,9 +13,16 @@
 	<h1>Products</h1>
 	<div class="card__container">
 		{#if services.length > 0}
-			{#each services as { id, serviceName, description } (id)}
+			{#each services as { id, serviceName, description, price } (id)}
 				<div class="card">
-					<h2>{serviceName} {description}</h2>
+					<img
+						src="https://thumbs.dreamstime.com/b/service-button-means-help-support-assistance-meaning-32068730.jpg"
+						alt="service image"
+						class="card__image"
+					/>
+					<p>Service Name - <span>{serviceName}</span></p>
+					<p>Description - <span>{description}</span></p>
+					<p>Price - <span>{price}</span></p>
 				</div>
 			{/each}
 		{:else}
@@ -40,20 +42,7 @@
 
 	h1 {
 		width: 100%;
-	}
-
-	.card {
-		min-width: 220px;
-		height: 400px;
-		border: 3px solid black;
-		border-radius: 10px;
-		margin: 1rem;
-		padding: 1rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
+		font-size: 4rem;
 	}
 
 	.card__container {
@@ -65,5 +54,37 @@
 		row-gap: 2rem;
 		margin: 0 auto;
 		max-width: 1200px;
+	}
+
+	.card {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		border: 1px solid var(--clr-primary-5);
+		border-radius: var(--radius);
+		padding: 1rem;
+		text-align: left;
+		width: 100%;
+		min-width: 250px;
+		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+		transition: all 0.2s ease-in-out;
+	}
+
+	.card__image {
+		width: 100%;
+		border-radius: var(--radius) var(--radius) 0 0;
+		object-fit: cover;
+	}
+
+	.card p {
+		font-size: 1.25rem;
+		font-weight: 600;
+		width: 100%;
+	}
+
+	.card span {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: red;
 	}
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let data: any;
 
-	const users = data.data.data;
+	const users = data.data;
 </script>
 
 <section>

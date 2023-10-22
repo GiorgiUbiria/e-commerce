@@ -1,9 +1,20 @@
-export const load = async () => {
-    const response = await fetch('http://localhost:3000/services')
+export const load = async ({ cookies }: any) => {
+    try {
+        const response = await fetch('http://localhost:3000/services/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                "Authorization": `${cookies.get('Authorization')}`,
+                "RefreshToken": `${cookies.get('RefreshToken')}`
+            }
+        })
 
-    const services: any = await response.json()
+        if(response.status === 200) {
+            const data = await response.json()
 
-    return {
-        services
+            return data
+        }
+    } catch (error) {
+        console.log(error)
     }
 }

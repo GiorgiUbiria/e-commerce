@@ -27,9 +27,17 @@ export const actions = {
             if (response?.data?.success) {
                 const accessToken = setCookie[0].split('=')[1].split(';')[0];
                 const refreshToken = setCookie[1].split('=')[1].split(';')[0];
-                cookies.set("Authorization", `Bearer ${accessToken}`);
-                cookies.set("RefreshToken", `Bearer ${refreshToken}`);
+
+                cookies.set("Authorization", `Bearer ${accessToken}`, {
+                    path: '/',
+                    maxAge: 30 * 60,
+                });
+                cookies.set("RefreshToken", `Bearer ${refreshToken}`, {
+                    path: '/',
+                    maxAge: 7 * 60 * 60 * 24,
+                });
                 cookies.set("userRole", response.data.data);
+
                 throw redirect(303, '/')
             }
         } catch (error) {

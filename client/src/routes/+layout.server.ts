@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-export function load({ cookies }: any) {
+export async function load({ cookies }: any) {
     const authorization = cookies.get('Authorization');
     const refreshToken = cookies.get('RefreshToken');
     const userRole = cookies.get('userRole');
@@ -10,5 +10,13 @@ export function load({ cookies }: any) {
             authorization,
             userRole,
         }
+    } else if (authorization && !refreshToken) {
+        cookies.delete('Authorization');
+        throw redirect(303, '/sign-in')
+    } else if (!authorization && refreshToken) {
+        cookies.set('Authorization', refreshToken, {
+            path: '/',
+            maxAge: 30 * 60,
+        })
     }
 }
