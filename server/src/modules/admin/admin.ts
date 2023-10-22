@@ -31,7 +31,7 @@ export const adminRoute = (app: Elysia) =>
                     if (!users) {
                         return {
                             success: true,
-                            data: users,
+                            data: null,
                             message: "Users retrieved",
                         }
                     }
@@ -43,10 +43,4 @@ export const adminRoute = (app: Elysia) =>
                     }
                 }
             })
-            .post(
-                "/create_service",
-                ({ db, body }: any) => {
-                    const { serviceName, price, description } = body;
-                    return db.createService({ serviceName, price, description });
-                },
-            ))
+    )

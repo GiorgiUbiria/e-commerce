@@ -1,6 +1,6 @@
 import { Database } from "bun:sqlite";
 
-import { User, UserDto, Service, ServiceDto } from "./types/types";
+import { User, UserDto, Service } from "./types/types";
 
 export class ServiceDB {
     private db: Database;
@@ -111,11 +111,13 @@ export class ServiceDB {
             return new Error("An error occurred while creating the user");
         }
 
-        return {
+        const service = {
             serviceName,
             price,
             description,
-        };
+        }
+
+        return service;
     }
 
 
@@ -228,9 +230,9 @@ export class ServiceDB {
         return users;
     }
 
-    async getAllServices(): Promise<ServiceDto[] | Error> {
-        const query = this.db.query(`SELECT (serviceName, price, description, userCount) services`);
-        const services = query.all() as ServiceDto[];
+    async getAllServices(): Promise<Service[] | Error> {
+        const query = this.db.query(`SELECT * from services`);
+        const services = query.all() as Service[];
 
         if (!services.length) {
             return new Error("No services found");

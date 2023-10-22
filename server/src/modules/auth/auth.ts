@@ -72,7 +72,7 @@ export const auth = (app: Elysia) =>
                     email: t.String(),
                 }),
             })
-            .post("/sign_in", async ({ db, body, set, jwt, setCookie }: any) => {
+            .post("/sign_in", async ({ db, body, set, jwt, setCookie, cookie }: any) => {
                 const { username, password }: any = body;
 
                 const user = await db.getUserByUsername(username);
@@ -100,24 +100,26 @@ export const auth = (app: Elysia) =>
                 const accessToken = await jwt.sign({
                     userId: user.id,
                 }, {
-                    expiresIn: 15 * 60 * 60,
+                    expiresIn: 30 * 60,
+                    issuer: "elysia",
                 });
 
                 const refreshToken = await jwt.sign({
                     userId: user.id,
                 }, {
-                    expiresIn: 7 * 24 * 60 * 60,
+                    expiresIn: 7 * 60 * 60 * 24,
+                    issuer: "elysia",
                 });
 
                 setCookie("accessToken", accessToken, {
                     httpOnly: true,
-                    maxAge: 15 * 60 * 60,
+                    maxAge: 30 * 60,
                     path: "/",
                 });
 
                 setCookie("refreshToken", refreshToken, {
                     httpOnly: true,
-                    maxAge: 7 * 24 * 60 * 60,
+                    maxAge: 7 * 60 * 60 * 24,
                     path: "/",
                 })
 
@@ -135,10 +137,12 @@ export const auth = (app: Elysia) =>
             .post("/sign_out", ({ setCookie }) => {
                 setCookie("accessToken", "", {
                     maxAge: 0,
+                    path: "/",
                 })
 
                 setCookie("refreshToken", "", {
                     maxAge: 0,
+                    path: "/",
                 })
             })
     );

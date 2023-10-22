@@ -35,5 +35,6 @@ export const isAuthenticated = (app: Elysia) =>
             }
         }
 
+        console.log("returning user data")
         return { authUserData }
     })

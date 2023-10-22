@@ -2,6 +2,8 @@ import { Elysia } from "elysia"
 import jwt from "@elysiajs/jwt"
 import cookie from "@elysiajs/cookie"
 import { ServiceDB } from "../../db"
+import { isAuthenticated } from "../../middleware/auth/isAuthenticated"
+import { Service } from "../../types/types"
 
 export const services = (app: Elysia) =>
     app.group("services", (app) =>
@@ -11,15 +13,52 @@ export const services = (app: Elysia) =>
         }))
             .use(cookie())
             .decorate("db", new ServiceDB())
-            .get("/", async ({ jwt, set, cookie: { accessToken }, db }) => {
-                const profile = await jwt.verify(accessToken)
+            .use(isAuthenticated)
+            .get("/", async (context) => {
+                const authUserData = context.authUserData;
+                const db = context.db;
 
-                if (!profile) {
-                    set.status = 401
-                    return []
+                if (authUserData.role === "admin") {
+                    const services: Service[] | Error = await db.getAllServices();
+
+                    if (!services) {
+                        return {
+                            success: true,
+                            data: null,
+                            message: "Services retrieved",
+                        }
+                    }
+
+                    return {
+                        success: true,
+                        data: services,
+                        message: "Services retrieved",
+                    }
                 }
-
-                const services = await  db.getAllServices()
-                return services
             })
+            .post(
+                "/create_service",
+                async (context) => {
+                    const authUserData = context.authUserData;
+                    const db = context.db;
+                    const body: any = context.body;
+
+                    const { serviceName, price, description } = body;
+
+                    if (authUserData.role !== "admin") {
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Unauthorized",
+                        }
+                    } else {
+                        const service = await db.createService({ serviceName, price, description });
+                        return {
+                            success: true,
+                            data: service,
+                            message: "Service created",
+                        }
+                    }
+                },
+            )
     )
