@@ -14,7 +14,7 @@
 	<div class="card__container">
 		{#if services.length > 0}
 			{#each services as { id, serviceName, description, price } (id)}
-				<div class="card">
+				<div class="card" on:click={() => (window.location.href = `/service/${id}`)}>
 					<img
 						src="https://thumbs.dreamstime.com/b/service-button-means-help-support-assistance-meaning-32068730.jpg"
 						alt="service image"
