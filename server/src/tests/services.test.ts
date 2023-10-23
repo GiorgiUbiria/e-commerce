@@ -3,7 +3,8 @@ import { ServiceDB } from '../db'
 import { isAuthenticated } from '../middleware/auth/isAuthenticated'
 import { jwt } from "@elysiajs/jwt"
 import { Elysia } from 'elysia'
-import { UserDto } from '../types/types'
+import { cookie } from '@elysiajs/cookie'
+import { Service } from '../types/types'
 
 const app = new Elysia()
     .decorate("db", new ServiceDB())
@@ -11,50 +12,106 @@ const app = new Elysia()
         name: 'jwt',
         secret: Bun.env.JWT_TOKEN as string,
     }))
-    .use(isAuthenticated)
-    .get('/users', async (context) => {
-        const authUserData = context.authUserData;
+    .use(cookie())
+    .get("/services", async (context) => {
         const db = context.db;
 
-        if (authUserData) {
-            const users: UserDto[] | Error = await db.getAllUsers();
+        try {
+            const services: Service[] | Error = await db.getAllServices();
+
+            if (!services) {
+                return {
+                    success: true,
+                    data: [],
+                    message: "Services retrieved",
+                }
+            }
 
             return {
                 success: true,
-                data: users,
-                message: "Users retrieved",
+                data: services,
+                message: "Services retrieved",
             }
-        } else {
+        } catch (error) {
             return {
                 success: false,
                 data: null,
-                message: "Unauthorized",
+                message: error,
+            }
+        }
+    })
+    .get("/services/:id", async (context) => {
+        const db = context.db;
+
+        const id = context.params.id;
+
+        const service: Service | Error = await db.getService(id);
+
+        if (service instanceof Error) {
+            return {
+                success: false,
+                data: null,
+                message: "Service not found",
             }
         }
 
+        return {
+            success: true,
+            data: service,
+            message: "Service retrieved",
+        }
     })
 
 describe('Elysia', () => {
-    it('return a fail response when unauthorized user tries to access the users', async () => {
-        const response = await (await app.handle(
-            new Request('http://localhost:3000/users')
-        )).json()
-
-        expect(response.success).toBe(false)
-    })
-
-    it('return an array of users as a response when the user is authorized and is an admin', async () => {
-        const response = await (await app.handle(
-            new Request('http://localhost:3000/users', {
+    it('return an array of services as a response if there are available services', async () => {
+        const response = await app.handle(
+            new Request('http://localhost:3000/services', {
                 method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.PhbC76jfrlBAXgnbeSTgq9BzrkSGXrMhVftlrWAYWt0',
-                    'RefreshToken': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.PhbC76jfrlBAXgnbeSTgq9BzrkSGXrMhVftlrWAYWt0'
-                }
             })
-        )).json()
+        )
 
-        expect(response.success).toBe(true)
+        const data = await response.json()
+
+        expect(data.success).toBe(true)
+    })
+
+    it('return a service if the there is a correct id', async () => {
+        const response = await app.handle(
+            new Request('http://localhost:3000/services/1', {
+                method: 'GET',
+                credentials: 'include',
+            })
+        )
+
+        const data = await response.json()
+
+        expect(data.success).toBe(true)
+    })
+
+    it('return a fail if the there is not a correct id', async () => {
+        const response = await app.handle(
+            new Request('http://localhost:3000/services/9831532511', {
+                method: 'GET',
+                credentials: 'include',
+            })
+        )
+
+        const data = await response.json()
+
+        expect(data.success).toBe(false)
+    })
+
+    it('return a fail if the user is not authorized while creating the service', async () => {
+        const response = await app.handle(
+            new Request('http://localhost:3000/services/create_service', {
+                method: 'GET',
+                credentials: 'include',
+            })
+        )
+
+        const data = await response.json()
+
+        expect(data.success).toBe(false)
     })
 })
