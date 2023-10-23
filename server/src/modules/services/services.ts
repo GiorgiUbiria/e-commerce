@@ -13,12 +13,10 @@ export const services = (app: Elysia) =>
         }))
             .use(cookie())
             .decorate("db", new ServiceDB())
-            .use(isAuthenticated)
             .get("/", async (context) => {
-                const authUserData = context.authUserData;
                 const db = context.db;
 
-                if (authUserData.role === "admin") {
+                try {
                     const services: Service[] | Error = await db.getAllServices();
 
                     if (!services) {
@@ -34,9 +32,36 @@ export const services = (app: Elysia) =>
                         data: services,
                         message: "Services retrieved",
                     }
+                } catch (error) {
+                    return {
+                        success: false,
+                        data: null,
+                        message: error,
+                    }
                 }
-            },
-            )
+            })
+            .get("/:id", async (context) => {
+                const db = context.db;
+
+                const id = context.params.id;
+
+                const service: Service | Error = await db.getService(id);
+
+                if (!service) {
+                    return {
+                        success: false,
+                        data: null,
+                        message: "Service not found",
+                    }
+                }
+
+                return {
+                    success: true,
+                    data: service,
+                    message: "Service retrieved",
+                }
+            })
+            .use(isAuthenticated)
             .post(
                 "/create_service",
                 async (context) => {
