@@ -144,5 +144,10 @@ export const auth = (app: Elysia) =>
                     maxAge: 0,
                     path: "/",
                 })
+
+                setCookie("userRole", "", {
+                    maxAge: 0,
+                    path: "/",
+                })
             })
     );

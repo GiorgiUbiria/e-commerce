@@ -1,8 +1,9 @@
-import { Elysia, t } from "elysia"
+import { Elysia } from "elysia"
 import jwt from "@elysiajs/jwt"
 import cookie from "@elysiajs/cookie"
 import { ServiceDB } from "../../db"
 import { isAuthenticated } from "../../middleware/auth/isAuthenticated"
+import { isFormValidated } from "../../middleware/auth/isFormValidated"
 import { Service } from "../../types/types"
 
 export const services = (app: Elysia) =>
@@ -61,15 +62,15 @@ export const services = (app: Elysia) =>
                     message: "Service retrieved",
                 }
             })
+            .use(isFormValidated)
             .use(isAuthenticated)
             .post(
                 "/create_service",
                 async (context) => {
                     const authUserData = context.authUserData;
                     const db = context.db;
-                    const body: any = context.body;
 
-                    const { serviceName, price, description } = body;
+                    const { success, data, message }: { success: boolean, data: null | { serviceName: string; description: string; price: string; }, message: string } = context.formValidationResponse!;
 
                     if (authUserData.role !== "admin") {
                         return {
@@ -78,25 +79,22 @@ export const services = (app: Elysia) =>
                             message: "Unauthorized",
                         }
                     } else {
-                        const service = await db.createService({ serviceName, price, description });
-                        return {
-                            success: true,
-                            data: service,
-                            message: "Service created",
+                        if (success === false) {
+                            return {
+                                success: false,
+                                data: null,
+                                message: message,
+                            }
+                        } else {
+                            let { serviceName, description, price } = data!;
+                            const service = await db.createService({ serviceName, price, description });
+                            return {
+                                success: true,
+                                data: service,
+                                message: message,
+                            }
                         }
                     }
                 },
-                {
-                    body: t.Object({
-                        serviceName: t.String(),
-                        price: t.Number(),
-                        description: t.String(),
-                    }),
-                    response: t.Object({
-                        success: t.Boolean(),
-                        data: t.Any(),
-                        message: t.String(),
-                    })
-                }
             )
     )
