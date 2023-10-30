@@ -240,4 +240,19 @@ export class ServiceDB {
 
         return services;
     }
+
+    async deleteService(id: string): Promise<Service | Error> {
+        const service = await this.getService(id);
+
+        if (service instanceof Error) {
+            return service;
+        }
+
+        const query = this.db.query(`DELETE FROM services WHERE id = $id`);
+        query.run({
+            $id: id,
+        })
+
+        return service
+    }
 }

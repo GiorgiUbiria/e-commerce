@@ -1,4 +1,4 @@
-import { Elysia } from "elysia"
+import { Elysia, t } from "elysia"
 import { isAuthenticated } from "../../middleware/auth/isAuthenticated"
 import { isFormValidated } from "../../middleware/validation/isServiceFormValid"
 import { Service } from "../../types/types"
@@ -31,6 +31,16 @@ export const services = (app: Elysia) =>
                     message: error,
                 }
             }
+        }, {
+            response: t.Object({
+                success: t.Boolean(),
+                data: t.Optional(t.Array(t.Object({
+                    serviceName: t.String(),
+                    description: t.String(),
+                    price: t.Number(),
+                }))),
+                message: t.String(),
+            }),
         })
             .get("/:id", async (context) => {
                 const db = context.db;
@@ -52,6 +62,16 @@ export const services = (app: Elysia) =>
                     data: service,
                     message: "Service retrieved",
                 }
+            }, {
+                response: t.Object({
+                    success: t.Boolean(),
+                    data: t.Optional(t.Object({
+                        serviceName: t.String(),
+                        description: t.String(),
+                        price: t.Number(),
+                    })),
+                    message: t.String(),
+                }),
             })
             .use(isFormValidated)
             .use(isAuthenticated)
@@ -86,6 +106,5 @@ export const services = (app: Elysia) =>
                             }
                         }
                     }
-                },
-            )
+                })
     )
