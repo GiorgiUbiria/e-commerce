@@ -2,6 +2,17 @@ import { Elysia } from "elysia";
 
 export const isFormValidated = (app: Elysia) =>
     app.derive(async ({ body, set }: any) => {
+        function sendErrorResponse(status: number, message: string) {
+            set.status = status;
+            return {
+                formValidationResponse: {
+                    success: false,
+                    data: null,
+                    message,
+                }
+            };
+        }
+
         if (!body) {
             return sendErrorResponse(401, "Empty body");
         }
@@ -12,8 +23,8 @@ export const isFormValidated = (app: Elysia) =>
             return sendErrorResponse(401, "Missing fields");
         }
 
-        if (price < 0) {
-            return sendErrorResponse(401, "Price cannot be negative");
+        if (price <= 0) {
+            return sendErrorResponse(401, "Price cannot be negative or equal to 0");
         }
 
         if (description.length < 10) {
@@ -32,6 +43,10 @@ export const isFormValidated = (app: Elysia) =>
             return sendErrorResponse(401, "Service name must be less than 30 characters");
         }
 
+        if (!/^[a-zA-Z]+$/.test(serviceName)) {
+            return sendErrorResponse(401, "Service name must contain only English letters");
+        }
+
         return {
             formValidationResponse: {
                 success: true,
@@ -43,15 +58,4 @@ export const isFormValidated = (app: Elysia) =>
                 message: "Form validated",
             }
         };
-
-        function sendErrorResponse(status: number, message: string) {
-            set.status = status;
-            return {
-                formValidationResponse: {
-                    success: false,
-                    data: null,
-                    message,
-                }
-            };
-        }
     });
