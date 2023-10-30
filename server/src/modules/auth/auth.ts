@@ -1,19 +1,11 @@
 import { Elysia, t } from "elysia";
-import { cookie } from "@elysiajs/cookie";
-import { jwt } from "@elysiajs/jwt";
 import { comparePassword, hashPassword, md5hash } from "../../utils/bcrypt";
-import { ServiceDB } from "../../db";
 
 export const auth = (app: Elysia) =>
     app.group("auth", (app) =>
         app
-            .use(jwt({
-                name: 'jwt',
-                secret: Bun.env.JWT_TOKEN as string,
-            }))
-            .use(cookie())
-            .decorate("db", new ServiceDB())
-            .post("/sign_up", async ({ db, body, set }) => {
+            .post("/sign_up", async (context) => {
+                const { db, body, set }: any = context;
                 const { firstName, lastName, password, username, email }: any = body;
 
                 const emailExists = await db.checkUserByEmail(email);
@@ -72,7 +64,8 @@ export const auth = (app: Elysia) =>
                     email: t.String(),
                 }),
             })
-            .post("/sign_in", async ({ db, body, set, jwt, setCookie }: any) => {
+            .post("/sign_in", async (context) => {
+                const { db, body, set, jwt, setCookie }: any = context;
                 const { username, password }: any = body;
 
                 const user = await db.getUserByUsername(username);
@@ -134,7 +127,8 @@ export const auth = (app: Elysia) =>
                     password: t.String(),
                 }),
             })
-            .post("/sign_out", ({ setCookie }) => {
+            .post("/sign_out", (context) => {
+                const { setCookie }: any = context;
                 setCookie("accessToken", "", {
                     maxAge: 0,
                     path: "/",

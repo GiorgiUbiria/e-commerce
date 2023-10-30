@@ -1,8 +1,4 @@
 import { Elysia } from "elysia";
-import { cookie } from "@elysiajs/cookie";
-import { jwt } from "@elysiajs/jwt";
-
-import { ServiceDB } from "../../db";
 
 import { UserDto } from "../../types/types";
 
@@ -11,12 +7,6 @@ import { isAuthenticated } from "../../middleware/auth/isAuthenticated";
 export const adminRoute = (app: Elysia) =>
     app.group("admin", (app) =>
         app
-            .use(jwt({
-                name: 'jwt',
-                secret: Bun.env.JWT_TOKEN as string,
-            }))
-            .use(cookie())
-            .decorate("db", new ServiceDB())
             .get("/", async () => {
                 return "Hello, World!"
             })

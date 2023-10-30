@@ -1,46 +1,37 @@
 import { Elysia } from "elysia"
-import jwt from "@elysiajs/jwt"
-import cookie from "@elysiajs/cookie"
-import { ServiceDB } from "../../db"
 import { isAuthenticated } from "../../middleware/auth/isAuthenticated"
-import { isFormValidated } from "../../middleware/auth/isFormValidated"
+import { isFormValidated } from "../../middleware/validation/isServiceFormValid"
 import { Service } from "../../types/types"
 
 export const services = (app: Elysia) =>
     app.group("services", (app) =>
-        app.use(jwt({
-            name: 'jwt',
-            secret: Bun.env.JWT_TOKEN as string,
-        }))
-            .use(cookie())
-            .decorate("db", new ServiceDB())
-            .get("/", async (context) => {
-                const db = context.db;
+        app.get("/", async (context) => {
+            const db = context.db;
 
-                try {
-                    const services: Service[] | Error = await db.getAllServices();
+            try {
+                const services: Service[] | Error = await db.getAllServices();
 
-                    if (!services) {
-                        return {
-                            success: true,
-                            data: [],
-                            message: "Services retrieved",
-                        }
-                    }
-
+                if (!services) {
                     return {
                         success: true,
-                        data: services,
+                        data: [],
                         message: "Services retrieved",
                     }
-                } catch (error) {
-                    return {
-                        success: false,
-                        data: null,
-                        message: error,
-                    }
                 }
-            })
+
+                return {
+                    success: true,
+                    data: services,
+                    message: "Services retrieved",
+                }
+            } catch (error) {
+                return {
+                    success: false,
+                    data: null,
+                    message: error,
+                }
+            }
+        })
             .get("/:id", async (context) => {
                 const db = context.db;
 
