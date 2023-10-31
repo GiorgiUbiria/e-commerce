@@ -31,16 +31,6 @@ export const services = (app: Elysia) =>
                     message: error,
                 }
             }
-        }, {
-            response: t.Object({
-                success: t.Boolean(),
-                data: t.Optional(t.Array(t.Object({
-                    serviceName: t.String(),
-                    description: t.String(),
-                    price: t.Number(),
-                }))),
-                message: t.String(),
-            }),
         })
             .get("/:id", async (context) => {
                 const db = context.db;
@@ -98,7 +88,17 @@ export const services = (app: Elysia) =>
                             }
                         } else {
                             let { serviceName, description, price } = data!;
-                            const service = await db.createService({ serviceName, price, description });
+                            const serviceAuthorId = authUserData.id.toString();
+
+                            const serviceToCreate = {
+                                serviceName,
+                                price,
+                                serviceAuthorId,
+                                description,
+                            }
+
+                            const service = await db.createService(serviceToCreate);
+
                             return {
                                 success: true,
                                 data: service,

@@ -18,6 +18,7 @@ export interface Service {
     createdAt: string;
     updatedAt: string;
     userCount: number;
+    serviceAuthorId: string;
 }
 
 export interface UserDto {
@@ -33,4 +34,5 @@ export interface ServiceDto {
     price: number;
     description: string;
     userCount: number;
+    serviceAuthorId: string;
 }

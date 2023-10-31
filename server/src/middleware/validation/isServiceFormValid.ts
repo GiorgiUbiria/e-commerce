@@ -13,6 +13,8 @@ export const isFormValidated = (app: Elysia) =>
             };
         }
 
+        console.log("validating the body" + JSON.stringify(body))
+
         if (!body) {
             return sendErrorResponse(401, "Empty body");
         }

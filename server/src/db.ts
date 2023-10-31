@@ -19,6 +19,7 @@ export class ServiceDB {
     serviceName TEXT NOT NULL,
     price FLOAT NOT NULL DEFAULT 0.0,
     description TEXT NOT NULL,
+    serviceAuthorId TEXT NOT NULL,
     createdAt TIMESTAMP NOT NULL DEFAULT current_timestamp,
     updatedAt TIMESTAMP NOT NULL DEFAULT current_timestamp,
     userCount INTEGER NOT NULL DEFAULT 0
@@ -37,8 +38,8 @@ export class ServiceDB {
     updatedAt TIMESTAMP NOT NULL DEFAULT current_timestamp
 )`;
 
-        this.db.run(query);
         this.db.run(query2);
+        this.db.run(query);
         return;
     }
 
@@ -85,10 +86,17 @@ export class ServiceDB {
     async createService({
         serviceName,
         price,
+        serviceAuthorId,
         description,
     }: Omit<Service, "id" | "createdAt" | "userCount" | "updatedAt">): Promise<
         Omit<Service, "id" | "createdAt" | "userCount" | "updatedAt"> | Error
     > {
+        console.log("Creating the service with: ", {
+            serviceName,
+            price,
+            serviceAuthorId,
+            description,
+        })
         const existingService = await this.getService(serviceName);
 
         if (!(existingService instanceof Error)) {
@@ -96,7 +104,7 @@ export class ServiceDB {
         }
 
         const query = this.db.query(`
-            INSERT INTO services (serviceName, price, description) VALUES ($serviceName, $price, $description)
+            INSERT INTO services (serviceName, price, description, serviceAuthorId) VALUES ($serviceName, $price, $description, $serviceAuthorId)
         `);
 
         let user: void | User;
@@ -106,6 +114,7 @@ export class ServiceDB {
                 $serviceName: serviceName,
                 $price: price,
                 $description: description,
+                $serviceAuthorId: serviceAuthorId,
             });
         } catch (e) {
             return new Error("An error occurred while creating the user");
@@ -114,12 +123,13 @@ export class ServiceDB {
         const service = {
             serviceName,
             price,
+            serviceAuthorId,
             description,
         }
 
+        console.log("Returning the service.")
         return service;
     }
-
 
     async getUserByEmail(email: string): Promise<UserDto | Error> {
         const query = this.db.query(
