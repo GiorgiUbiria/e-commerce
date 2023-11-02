@@ -1,5 +1,8 @@
 <script lang="ts">
 	export let data: any;
+
+	const service = data.data;
+	const message = data.message;
 </script>
 
 <section>
@@ -14,15 +17,15 @@
 		<div class="card__content">
 			<div class="card__content__item">
 				<p>Service Name:</p>
-				<p>{data.serviceName}</p>
+				<p>{service.serviceName}</p>
 			</div>
 			<div class="card__content__item">
 				<p>Description:</p>
-				<p>{data.description}</p>
+				<p>{service.description}</p>
 			</div>
 			<div class="card__content__item">
 				<p>Price:</p>
-				<p>{data.price}$</p>
+				<p>{service.price}$</p>
 			</div>
 		</div>
 	</div>

@@ -3,77 +3,50 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
-	<h1>Create a Service</h1>
-
-	<form method="POST" class="form">
-		<label for="serviceName">
-			<input type="text" name="serviceName" placeholder="Service Name" />
-		</label>
-		<label for="description">
-			<textarea name="description" placeholder="Service Description" />
-		</label>
-		<label for="price">
-			<input type="number" name="price" placeholder="Service Price" />
-		</label>
-
-		<button type="submit" id="submit__button">Create Service</button>
-	</form>
-</section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.form {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		max-width: 400px;
-	}
-
-	label {
-		border-radius: 5px;
-		padding: 0.5rem;
-		margin: 0.5rem;
-		width: 100%;
-		display: flex;
-	}
-
-	input,
-	textarea {
-		border-radius: 5px;
-		padding: 0.5rem;
-		margin: 0.5rem;
-		width: 100%;
-		border: 1px solid black;
-		outline: none;
-		resize: none;
-	}
-
-	#submit__button {
-		border-radius: 5px;
-		padding: 0.5rem;
-		margin: 0.5rem;
-		width: 100%;
-		border: 1px solid black;
-		outline: none;
-		cursor: pointer;
-		background-color: var(--color-theme-1);
-		color: white;
-		font-weight: bold;
-		font-size: 1rem;
-		transition: all 0.2s ease-in-out;
-		box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-	}
-</style>
+<main class="flex flex-col flex-grow px-4 bg-gray-800">
+	<section class="py-12">
+		<div class="flex justify-between items-center mb-8">
+			<h2 class="text-2xl font-bold text-white">Create Service</h2>
+		</div>
+		<form method="POST" class="bg-gray-700 p-6 rounded-lg max-w-md mx-auto" id="1iyec55h1vg">
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="serviceName">
+					Service Name
+				</label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					name="serviceName"
+					id="serviceName"
+					type="text"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter a service name.</p>
+			</div>
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="description">
+					Service Description
+				</label>
+				<textarea
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					name="description"
+					id="service-description"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter a service description.</p>
+			</div>
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="price"> Service Price </label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					id="price"
+					type="text"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter a service price.</p>
+			</div>
+			<button
+				type="submit"
+				class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-white hover:bg-black/90 h-10 px-4 py-2 w-full mt-4"
+			>
+				Create Service
+			</button>
+		</form>
+	</section>
+</main>

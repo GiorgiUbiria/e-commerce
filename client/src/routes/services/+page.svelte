@@ -5,86 +5,74 @@
 </script>
 
 <svelte:head>
-	<title>Services</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>All Services</title>
+	<meta name="description" content="all available services" />
 </svelte:head>
 
-<section>
-	<h1>Products</h1>
-	<div class="card__container">
-		{#if services.length > 0}
-			{#each services as { id, serviceName, description, price } (id)}
-				<div class="card" on:click={() => (window.location.href = `/service/${id}`)}>
+<main class="flex flex-col flex-grow px-4 bg-gray-800">
+	<section class="py-12">
+		<div class="flex justify-between items-center mb-8">
+			<h2 class="text-2xl font-bold text-white">Our Services</h2>
+			<div class="flex space-x-4">
+				<input
+					placeholder="Search"
+					class="px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none"
+					type="text"
+				/>
+				<button
+					type="button"
+					role="combobox"
+					aria-controls="radix-:r0:"
+					aria-expanded="false"
+					aria-autocomplete="none"
+					dir="ltr"
+					data-state="closed"
+					data-placeholder=""
+					class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+				>
+					<span style="pointer-events: none;">Filter</span>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="h-4 w-4 opacity-50"
+						aria-hidden="true"
+					>
+						<path d="m6 9 6 6 6-6" />
+					</svg>
+				</button>
+			</div>
+		</div>
+		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+			{#each services as service (service.id)}
+				<div class="flex flex-col items-center text-center p-4 bg-gray-700 rounded-lg">
 					<img
-						src="https://thumbs.dreamstime.com/b/service-button-means-help-support-assistance-meaning-32068730.jpg"
-						alt="service image"
-						class="card__image"
+						src="https://via.placeholder.com/200x200"
+						width="200"
+						height="200"
+						alt="Service 1"
+						class="rounded-full transform hover:scale-110 transition-transform"
+						style="aspect-ratio: 200 / 200; object-fit: cover;"
 					/>
-					<p>Service Name - <span>{serviceName}</span></p>
-					<p>Description - <span>{description}</span></p>
-					<p>Price - <span>{price}</span></p>
+					<h3 class="text-lg font-semibold mt-4 mb-2 text-white">{service.serviceName}</h3>
+					<p class="text-gray-400">{service.description}</p>
+					<p class="text-lg font-semibold mt-4 mb-2 text-white">${service.price}</p>
+					<a href="#">
+						<a
+							class="text-sm font-semibold text-blue-400 hover:underline"
+							href="/service/{service.id}"
+						>
+							Read More
+						</a>
+					</a>
 				</div>
 			{/each}
-		{:else}
-			<p>No services found.</p>
-		{/if}
-	</div>
-</section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-		font-size: 4rem;
-	}
-
-	.card__container {
-		width: 100%;
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		justify-content: center;
-		column-gap: 2rem;
-		row-gap: 2rem;
-		margin: 0 auto;
-		max-width: 1200px;
-	}
-
-	.card {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-		border: 1px solid var(--clr-primary-5);
-		border-radius: var(--radius);
-		padding: 1rem;
-		text-align: left;
-		width: 100%;
-		min-width: 250px;
-		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-		transition: all 0.2s ease-in-out;
-	}
-
-	.card__image {
-		width: 100%;
-		border-radius: var(--radius) var(--radius) 0 0;
-		object-fit: cover;
-	}
-
-	.card p {
-		font-size: 1.25rem;
-		font-weight: 600;
-		width: 100%;
-	}
-
-	.card span {
-		font-size: 1.5rem;
-		font-weight: 600;
-		color: red;
-	}
-</style>
+		</div>
+	</section>
+</main>

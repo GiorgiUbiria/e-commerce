@@ -4,6 +4,13 @@ import type { App } from '../../../../server/src/index'
 
 const fetch = edenFetch<App>('http://localhost:3000/')
 
+export const load = async ({cookies}: any) => {
+    if (cookies.get("Authorization") || cookies.get("RefreshToken")) {
+        console.log("redirecting")
+        throw redirect(303, '/')
+    }
+}
+
 export const actions = {
     default: async ({ request }: any) => {
         const data = await request.formData();
@@ -13,8 +20,6 @@ export const actions = {
         const email = data.get('email');
         const username = data.get('username');
         const password = data.get('password');
-
-        console.log(firstName, lastName, email, username, password)
 
         try {
             const response = await fetch('auth/sign_up', {

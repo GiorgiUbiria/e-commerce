@@ -1,86 +1,65 @@
-<script lang="ts">
-</script>
-
-<section>
-	<h1>Sign Up</h1>
-	<form method="POST">
-		<label>
-			First Name
-			<input type="text" name="firstName" placeholder="First Name" required />
-		</label>
-		<label>
-			Last Name
-			<input type="text" name="lastName" placeholder="Last Name" required />
-		</label>
-		<label>
-			Email
-			<input type="email" name="email" placeholder="email@email.com" required />
-		</label>
-		<label>
-			Username
-			<input type="text" name="username" placeholder="username" required />
-		</label>
-		<label>
-			Password
-			<input type="password" name="password" placeholder="*******" required />
-		</label>
-
-		<button type="submit">Sign Up</button>
-	</form>
-</section>
-
-<style>
-	form {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		width: 100%;
-		height: 100%;
-		margin: 0 auto;
-		max-width: 40rem;
-		padding: 1rem;
-		box-sizing: border-box;
-		gap: 2rem;
-	}
-
-	label {
-		display: flex;
-		flex-direction: column;
-		max-width: 100%;
-		gap: 0.5rem;
-		width: 20rem;
-		justify-content: space-between;
-		align-items: center;
-		font-weight: bold;
-	}
-
-	input {
-		padding: 0.5rem;
-		box-sizing: border-box;
-		border-radius: 5px;
-		border: 1px solid #ccc;
-	}
-
-	button {
-		width: 25%;
-		padding: 0.5rem;
-		box-sizing: border-box;
-		border-radius: 5px;
-		border: 1px solid #ccc;
-		cursor: pointer;
-		background-color: #ccc;
-		color: #000;
-		font-weight: bold;
-		transition: 0.1s;
-		text-align: center;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		margin-top: 1rem;
-	}
-
-	button:hover {
-		opacity: 0.6;
-		transition: 0.1s;
-	}
-</style>
+<main class="flex flex-col flex-grow px-4 bg-gray-800">
+	<section class="py-12">
+		<div class="flex justify-between items-center mb-8">
+			<h2 class="text-2xl font-bold text-white">Sign Up</h2>
+		</div>
+		<form method="POST" class="bg-gray-700 p-6 rounded-lg max-w-md mx-auto">
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="firstName"> First Name </label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					name="firstName"
+					id="firstName"
+					type="text"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter your first name.</p>
+			</div>
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="lastName"> Last Name </label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					name="lastName"
+					id="lastName"
+					type="text"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter your last name.</p>
+			</div>
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="email"> Email </label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					name="email"
+					id="email"
+					type="email"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter your email.</p>
+			</div>
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="username"> Username </label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					name="username"
+					id="username"
+					type="text"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter your username.</p>
+			</div>
+			<div class="mb-4">
+				<label class="block text-white text-sm font-bold mb-2" for="password"> Password </label>
+				<input
+					class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+					id="password"
+					name="password"
+					type="password"
+				/>
+				<p class="text-red-500 text-xs italic">Please enter your password.</p>
+			</div>
+			<button
+				type="submit"
+				class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-white hover:bg-black/70 h-10 px-4 py-2 w-full mt-4"
+			>
+				Sign Up
+			</button>
+		</form>
+	</section>
+</main>

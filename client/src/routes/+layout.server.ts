@@ -12,6 +12,7 @@ export async function load({ cookies }: any) {
         }
     } else if (authorization && !refreshToken) {
         cookies.delete('Authorization');
+        cookies.delete("userRole")
         throw redirect(303, '/sign-in')
     } else if (!authorization && refreshToken) {
         cookies.set('Authorization', refreshToken, {

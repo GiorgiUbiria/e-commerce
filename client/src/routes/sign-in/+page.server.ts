@@ -5,6 +5,13 @@ import type { App } from '../../../../server/src/index'
 
 const fetch = edenFetch<App>('http://localhost:3000/')
 
+export const load = async ({cookies}: any) => {
+    if (cookies.get("Authorization") || cookies.get("RefreshToken")) {
+        console.log("redirecting")
+        throw redirect(303, '/')
+    }
+}
+
 export const actions = {
     default: async ({ request, cookies }: any) => {
         const data = await request.formData();
