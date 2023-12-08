@@ -13,7 +13,9 @@ export const isAuthenticated = (app: Elysia) =>
 
         const authorizationToken = headers!.authorization.split(" ")[1];
 
+
         const { userId } = await jwt.verify(authorizationToken);
+
         
         if (!userId) {
             set.status = 401;
@@ -25,6 +27,7 @@ export const isAuthenticated = (app: Elysia) =>
         }
 
         const authUserData = await db.getUserById(userId);
+
 
         if (!authUserData) {
             set.status = 401;

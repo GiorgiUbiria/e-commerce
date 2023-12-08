@@ -6,8 +6,11 @@ import cors from "@elysiajs/cors";
 import { logger } from '@bogeychan/elysia-logger';
 
 import { auth } from "./modules/auth/auth";
+import { user } from "./modules/user/user";
 import { services } from "./modules/services/services";
 import { adminRoute } from "./modules/admin/admin";
+
+import { Service } from "./types/types"
 
 import { ServiceDB } from "./db";
 
@@ -30,9 +33,34 @@ const app = new Elysia()
         })
     )
     .use(cookie())
-    .get("/", async () => {
-        return "Hello, World!"
+    .get("/", async (context) => {
+        const db = context.db;
+
+        try {
+            const services: Service[] | Error = await db.getAllServices();
+
+            if (!services) {
+                return {
+                    success: true,
+                    data: [],
+                    message: "Services retrieved",
+                }
+            }
+
+            return {
+                success: true,
+                data: services,
+                message: "Services retrieved",
+            }
+        } catch (error) {
+            return {
+                success: false,
+                data: null,
+                message: error,
+            }
+        }
     })
+    .use(user)
     .use(auth)
     .use(adminRoute)
     .use(services)

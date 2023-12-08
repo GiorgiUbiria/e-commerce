@@ -32,6 +32,47 @@ export const services = (app: Elysia) =>
                 }
             }
         })
+            .post("/", async (context: any) => {
+                const db: any = context.db;
+                const body: any = context.body;
+
+                let { search, filter } = body;
+
+                if (!search || !filter) {
+                    return {
+                        success: false,
+                        data: null,
+                        message: "Missing fields",
+                    }
+                }
+
+                switch (filter) {
+                    case "date": filter = "created_at"; break;
+                    case "name": filter = "serviceName"; break;
+                    case "id": filter = "id"; break;
+                    default: return {
+                        success: false,
+                        data: null,
+                        message: "Invalid filter",
+                    }
+                }
+
+                try {
+                    const services: Service[] | Error = await db.filterServices(search, filter);
+
+                    return {
+                        success: true,
+                        data: services,
+                        message: "Filtered services retrieved",
+                    }
+                } catch (error) {
+                    return {
+                        success: false,
+                        data: null,
+                        message: error,
+                    }
+                }
+            })
             .get("/:id", async (context) => {
                 const db = context.db;
 
@@ -96,6 +137,8 @@ export const services = (app: Elysia) =>
                                 serviceAuthorId,
                                 description,
                             }
+
+                            console.log(serviceToCreate)
 
                             const service = await db.createService(serviceToCreate);
 

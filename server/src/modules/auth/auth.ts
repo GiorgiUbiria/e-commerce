@@ -118,7 +118,10 @@ export const auth = (app: Elysia) =>
 
                 return {
                     success: true,
-                    data: user.role,
+                    data: {
+                        role: user.role,
+                        id: user.id,
+                    },
                     message: "User signed in",
                 }
             }, {

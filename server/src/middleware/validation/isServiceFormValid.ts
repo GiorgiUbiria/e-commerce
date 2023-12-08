@@ -25,7 +25,7 @@ export const isFormValidated = (app: Elysia) =>
             return sendErrorResponse(401, "Missing fields");
         }
 
-        if (price <= 0) {
+        if (Number(price) <= 0) {
             return sendErrorResponse(401, "Price cannot be negative or equal to 0");
         }
 
@@ -45,9 +45,7 @@ export const isFormValidated = (app: Elysia) =>
             return sendErrorResponse(401, "Service name must be less than 30 characters");
         }
 
-        if (!/^[a-zA-Z]+$/.test(serviceName)) {
-            return sendErrorResponse(401, "Service name must contain only English letters");
-        }
+        console.log("Form validated")
 
         return {
             formValidationResponse: {

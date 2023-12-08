@@ -12,6 +12,7 @@ export const adminRoute = (app: Elysia) =>
             })
             .use(isAuthenticated)
             .get("/users", async (context) => {
+                console.log(context)
                 const authUserData = context.authUserData;
                 const db = context.db;
 

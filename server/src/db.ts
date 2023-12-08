@@ -97,6 +97,7 @@ export class ServiceDB {
             serviceAuthorId,
             description,
         })
+
         const existingService = await this.getService(serviceName);
 
         if (!(existingService instanceof Error)) {
@@ -264,5 +265,21 @@ export class ServiceDB {
         })
 
         return service
+    }
+
+    async filterServices(searchParam: string, selectParam: string): Promise<Service[] | Error> {
+        const query = this.db.query(
+            `SELECT * FROM services WHERE serviceName LIKE $searchParam`
+        );
+
+        const services = query.all({
+            $searchParam: `%${searchParam}%`,
+        }) as Service[];
+
+        if (!services.length) {
+            return new Error("No services found with this name");
+        }
+
+        return services;
     }
 }
