@@ -5,21 +5,25 @@
 </script>
 
 <header class="flex items-center justify-between px-4 py-2 bg-gray-900">
-	<a href="#"
-		><svg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			class=" h-8 w-8 text-white"
-			><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg
-		><span class="sr-only">Logo</span></a
-	>
+	{#if user.userId}
+		<a href="/user">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				class=" h-8 w-8 text-white"
+			>
+				<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+			</svg>
+			<span class="sr-only">Logo</span>
+		</a>
+	{/if}
 	<nav class="space-x-4">
 		{#if !user.authorization}
 			<a

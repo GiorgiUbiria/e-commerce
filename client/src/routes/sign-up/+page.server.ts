@@ -6,7 +6,6 @@ const fetch = edenFetch<App>('http://localhost:3000/')
 
 export const load = async ({cookies}: any) => {
     if (cookies.get("Authorization") || cookies.get("RefreshToken")) {
-        console.log("redirecting")
         throw redirect(303, '/')
     }
 }

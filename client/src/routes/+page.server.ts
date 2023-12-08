@@ -1,9 +1,7 @@
 export async function load() {
-    const response = await fetch('http://localhost:3000/');
+    const response = await fetch("http://localhost:3000/");
 
-    const text = await response.text();
+    const data = await response.json();
 
-    return {
-        text
-    }
+    return data;
 }

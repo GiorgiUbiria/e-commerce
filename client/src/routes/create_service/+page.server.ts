@@ -1,15 +1,17 @@
-import { redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 
 export const actions = {
     default: async ({ request, cookies }: any) => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         const data = await request.formData()
 
-        const serviceName = data.get('serviceName');
-        const price = data.get('price');
-        const description = data.get('description');
-
         try {
-            const result = await fetch('http://localhost:3000/services/create_service', {
+            const serviceName = data.get('serviceName');
+            const price = data.get('price');
+            const description = data.get('description');
+
+            await fetch('http://localhost:3000/services/create_service', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -23,15 +25,11 @@ export const actions = {
                 }),
                 credentials: 'include',
             })
-            
-            if(result.status === 200) {
-                throw redirect(303, '/services');
-            } else {
-                throw new Error(String(result.status))
-            }
         } catch (error) {
-            console.log(error)
+            return fail(422, {
+                description: (error as Error).message,
+                error: (error as Error).message
+            })
         }
     }
 };
-

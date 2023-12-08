@@ -9,6 +9,6 @@
 
 <div class="flex flex-col min-h-screen bg-gray-800">
 	<Header user={data} />
-	<slot />
+	<slot user={data} />
 	<Footer />
 </div>

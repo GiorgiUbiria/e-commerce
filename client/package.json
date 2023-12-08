@@ -35,6 +35,12 @@
   },
   "type": "module",
   "dependencies": {
-    "@elysiajs/eden": "^0.7.4"
+    "@elysiajs/eden": "^0.7.4",
+    "@popperjs/core": "^2.11.8",
+    "flowbite": "^2.2.0",
+    "flowbite-svelte": "^0.44.20",
+    "jsonwebtoken": "^9.0.2",
+    "tailwind-merge": "^2.1.0",
+    "tw-elements": "^1.0.0"
   }
 }

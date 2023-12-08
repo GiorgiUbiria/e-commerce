@@ -5,85 +5,26 @@
 	const message = data.message;
 </script>
 
-<section>
-	<h1>Service</h1>
-
-	<div class="card">
-		<img
-			src="https://thumbs.dreamstime.com/b/service-button-means-help-support-assistance-meaning-32068730.jpg"
-			alt="service"
-			class="card__image"
-		/>
-		<div class="card__content">
-			<div class="card__content__item">
-				<p>Service Name:</p>
-				<p>{service.serviceName}</p>
-			</div>
-			<div class="card__content__item">
-				<p>Description:</p>
-				<p>{service.description}</p>
-			</div>
-			<div class="card__content__item">
-				<p>Price:</p>
-				<p>{service.price}$</p>
+<main class="flex flex-col flex-grow px-4 bg-gray-800">
+	<section class="py-12 bg-gray-800">
+		<div
+			class="flex flex-col md:flex-row justify-center items-start space-y-4 md:space-y-0 md:space-x-4"
+		>
+			<div class="flex flex-col items-center space-x-4">
+				<h2 class="text-2xl font-semibold text-white mb-4 md:mb-0">{service.serviceName}</h2>
+				<img
+					src="/placeholder.svg"
+					alt="Service"
+					height="400"
+					width="400"
+					class="rounded-lg bg-gray-700"
+					style="aspect-ratio: 400 / 400; object-fit: cover;"
+				/>
+				<div class="flex flex-col space-y-4 mt-20 md:mt-0">
+					<p class="text-lg text-white font-semibold">{service.description}</p>
+					<p class="text-2xl text-white text-center">${service.price}</p>
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.card {
-		display: flex;
-		align-items: evenly;
-		justify-content: evenly;
-		width: 100%;
-		height: 100%;
-		margin: 0 auto;
-		max-width: 40rem;
-		padding: 1rem;
-		box-sizing: border-box;
-		gap: 2rem;
-	}
-
-	.card__image {
-		width: 50%;
-		height: auto;
-		object-fit: contain;
-		border-radius: var(--radius) var(--radius) 0 0;
-		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-	}
-
-	.card__content {
-		display: flex;
-		flex-direction: column;
-		justify-content: start;
-		width: 100%;
-		height: 100%;
-		margin: 0 auto;
-		max-width: 40rem;
-		padding: 1rem;
-		box-sizing: border-box;
-		gap: 2rem;
-		text-align: center;
-	}
-
-	.card__content__item {
-		display: flex;
-		width: 100%;
-		justify-content: between;
-		text-align: center;
-		gap: 2rem;
-	}
-</style>
+	</section>
+</main>
