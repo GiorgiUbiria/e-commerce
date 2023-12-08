@@ -83,6 +83,13 @@
 			>
 				Create a Service
 			</a>
+			<a
+				aria-current={$page.url.pathname.startsWith('/sign-out') ? 'page' : undefined}
+				class="text-sm font-semibold text-white hover:underline"
+				href="/sign-out"
+			>
+				Sign Out
+			</a>
 		{:else if user.userRole !== 'admin' && user.authorization}
 			<a
 				aria-current={$page.url.pathname === '/' ? 'page' : undefined}
@@ -97,6 +104,13 @@
 				href="/services"
 			>
 				Services
+			</a>
+			<a
+				aria-current={$page.url.pathname.startsWith('/sign-out') ? 'page' : undefined}
+				class="text-sm font-semibold text-white hover:underline"
+				href="/sign-out"
+			>
+				Sign Out
 			</a>
 		{/if}
 	</nav>

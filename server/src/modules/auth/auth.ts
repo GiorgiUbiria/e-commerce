@@ -130,7 +130,7 @@ export const auth = (app: Elysia) =>
                     password: t.String(),
                 }),
             })
-            .post("/sign_out", (context) => {
+            .get("/sign_out", (context) => {
                 const { setCookie }: any = context;
                 setCookie("accessToken", "", {
                     maxAge: 0,
@@ -143,6 +143,11 @@ export const auth = (app: Elysia) =>
                 })
 
                 setCookie("userRole", "", {
+                    maxAge: 0,
+                    path: "/",
+                })
+
+                setCookie("userId", "", {
                     maxAge: 0,
                     path: "/",
                 })
