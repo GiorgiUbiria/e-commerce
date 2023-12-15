@@ -5,6 +5,11 @@
 	import '../app.css';
 
 	export let data: any;
+	import { setContext } from 'svelte';
+	import { writable } from 'svelte/store';
+
+	const userStore = writable(data);
+	setContext('user', userStore);
 </script>
 
 <div class="flex flex-col min-h-screen bg-gray-800">
