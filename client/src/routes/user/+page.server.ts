@@ -2,7 +2,7 @@ import {redirect} from "@sveltejs/kit";
 
 export async function load({ cookies }: any) {
    if(!cookies.get("Authorization") || !cookies.get("RefreshToken")) {
-       throw redirect(303, "/sign-in")
+       redirect(303, "/sign-in");
    }
 
    const userId = cookies.get("userId");

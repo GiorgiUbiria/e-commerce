@@ -16,7 +16,7 @@ export async function load({ cookies }: any) {
         cookies.delete('Authorization');
         cookies.delete("userRole")
         cookies.delete("userId")
-        throw redirect(303, '/sign-in')
+        redirect(303, '/sign-in');
     } else if (!authorization && refreshToken) {
         cookies.set('Authorization', refreshToken, {
             path: '/',

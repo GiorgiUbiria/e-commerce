@@ -4,7 +4,7 @@ export async function load({ cookies }: any) {
     const authorization = cookies.get('Authorization');
 
     if (!authorization) {
-        throw redirect(303, '/')
+        redirect(303, '/');
     }
 
     await fetch('http://localhost:3000/auth/sign_out', {
@@ -13,10 +13,10 @@ export async function load({ cookies }: any) {
     })
 
     if (authorization) {
-        cookies.delete('Authorization');
-        cookies.delete('RefreshToken');
-        cookies.delete("userRole")
-        cookies.delete("userId")
-        throw redirect(303, '/')
+        /* @migration task: add path argument */ cookies.delete('Authorization');
+        /* @migration task: add path argument */ cookies.delete('RefreshToken');
+        /* @migration task: add path argument */ cookies.delete("userRole")
+        /* @migration task: add path argument */ cookies.delete("userId")
+        redirect(303, '/');
     }
 }

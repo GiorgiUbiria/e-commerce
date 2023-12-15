@@ -6,7 +6,7 @@ const fetch = edenFetch<App>('http://localhost:3000/')
 
 export const load = async ({cookies}: any) => {
     if (cookies.get("Authorization") || cookies.get("RefreshToken")) {
-        throw redirect(303, '/')
+        redirect(303, '/');
     }
 }
 
@@ -35,7 +35,7 @@ export const actions = {
 
             if (response?.data?.success) {
                 console.log("success")
-                throw redirect(303, '/')
+                redirect(303, '/');
             }
         } catch (error) {
             console.log(error)

@@ -7,7 +7,7 @@ const fetch = edenFetch<App>("http://localhost:3000/");
 
 export const load = async ({ cookies }: any) => {
   if (cookies.get("Authorization") || cookies.get("RefreshToken")) {
-    throw redirect(303, "/");
+    redirect(303, "/");
   }
 };
 
@@ -42,10 +42,10 @@ export const actions = {
           path: "/",
           maxAge: 7 * 60 * 60 * 24,
         });
-        cookies.set("userRole", response.data.data.role);
-        cookies.set("userId", response.data.data.id);
+        /* @migration task: add path argument */ cookies.set("userRole", response.data.data.role);
+        /* @migration task: add path argument */ cookies.set("userId", response.data.data.id);
 
-        throw redirect(303, "/");
+        redirect(303, "/");
       }
     } catch (error) {
       console.log(error);
