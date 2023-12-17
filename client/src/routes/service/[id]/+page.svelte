@@ -2,7 +2,6 @@
 	export let data: any;
 
 	const service = data.data;
-	const message = data.message;
 </script>
 
 <main class="flex flex-col flex-grow px-4 bg-gray-800">

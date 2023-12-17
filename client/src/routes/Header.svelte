@@ -37,6 +37,7 @@
 				aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}
 				class="text-sm font-semibold text-white hover:underline"
 				href="/services"
+				data-sveltekit-preload-data="hover"
 			>
 				Services
 			</a>
@@ -66,6 +67,7 @@
 				aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}
 				class="text-sm font-semibold text-white hover:underline"
 				href="/services"
+				data-sveltekit-preload-data="hover"
 			>
 				Services
 			</a>
@@ -102,6 +104,7 @@
 				aria-current={$page.url.pathname.startsWith('/services') ? 'page' : undefined}
 				class="text-sm font-semibold text-white hover:underline"
 				href="/services"
+				data-sveltekit-preload-data="hover"
 			>
 				Services
 			</a>
